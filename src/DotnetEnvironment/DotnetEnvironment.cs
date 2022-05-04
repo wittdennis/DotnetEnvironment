@@ -1,7 +1,10 @@
-﻿namespace Wittdennis;
+﻿namespace Pseud0R4ndom;
 
 using System.Security;
 
+/// <summary>
+/// Provides information about the current environment and platform. This class cannot be inherited.
+/// </summary>
 public static class DotnetEnvironment
 {
     /// <summary>

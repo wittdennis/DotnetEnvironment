@@ -1,6 +1,6 @@
 using Xunit;
 
-namespace Wittdennis.Tests;
+namespace Pseud0R4ndom.Tests;
 
 public class DotnetEnvironmentTests
 {
@@ -43,5 +43,16 @@ public class DotnetEnvironmentTests
         Environment.SetEnvironmentVariable("DOTNET_ENVIRONMENT", env, EnvironmentVariableTarget.Process);
 
         Assert.True(DotnetEnvironment.IsDevelopment);
+    }
+
+    [Theory]
+    [InlineData("VAR_NAME", "value")]
+    [InlineData("VAR_NAME2", "Test")]
+    [InlineData("VAR_NAME3", null!)]
+    public void GetEnvironmentVariable_Should_ReturnEnvironmentVariable(string variable, string? value)
+    {
+        Environment.SetEnvironmentVariable(variable, value, EnvironmentVariableTarget.Process);
+
+        Assert.Equal(value, DotnetEnvironment.GetEnvironmentVariable(variable));
     }
 }
