@@ -1,5 +1,12 @@
-﻿namespace Pseud0R4ndom;
+﻿using System.Runtime.CompilerServices;
 
+[assembly: InternalsVisibleTo("DotnetEnvironment.Tests")]
+[assembly: InternalsVisibleTo("DynamicProxyGenAssembly2")]
+
+namespace Pseud0R4ndom;
+
+using System.Reflection;
+using System.Runtime.InteropServices;
 using System.Security;
 
 /// <summary>
@@ -7,6 +14,27 @@ using System.Security;
 /// </summary>
 public static class DotnetEnvironment
 {
+    private static IRuntimeHelper? s_runtimeHelper;
+
+    /// <summary>
+    /// Helper for OS dependency
+    /// </summary>
+    internal static IRuntimeHelper RuntimeHelper
+    {
+        get
+        {                     
+            if (s_runtimeHelper == null)
+            {
+                s_runtimeHelper = new RuntimeHelper();
+            }
+            return s_runtimeHelper;
+        }
+        set
+        {
+            s_runtimeHelper = value;
+        }
+    }
+
     /// <summary>
     /// Gets the current app environment
     /// </summary>
@@ -28,4 +56,76 @@ public static class DotnetEnvironment
     /// <exception cref="SecurityException">The caller does not have the required permission to perform this operation.</exception>
     public static string? GetEnvironmentVariable(string variable)
         => System.Environment.GetEnvironmentVariable(variable);
+
+    /// <summary>
+    /// Gets the directory where the application can store its log files
+    /// </summary>
+    /// <returns></returns>
+    /// <exception cref="DirectoryNotFoundException">When a log location could not be determined</exception>
+    /// <exception cref="NullReferenceException">When the entry assembly could not be determined. See remarks for more info</exception>
+    /// <remarks>    
+    /// This method uses <see href="https://docs.microsoft.com/dotnet/api/system.reflection.assembly.getentryassembly#remarks">Assembly.GetEntryAssembly()</see> internally and thus has the same limitations. 
+    /// It is adviced to use the <see cref="GetLogDirectory(string)" instead.
+    /// </remarks>
+    public static string GetLogDirectory()     
+        => GetLogDirectory(Assembly.GetEntryAssembly()!.GetName().Name!);    
+
+    /// <summary>
+    /// Gets the directory where the application can store its log files
+    /// </summary>
+    /// <param name="appName">Name of the app. Will be used for the full path</param>
+    /// <returns></returns>
+    /// <exception cref="DirectoryNotFoundException">When a log location could not be determined</exception>
+    public static string GetLogDirectory(string appName)
+    {
+        if (string.IsNullOrWhiteSpace(appName))
+        {
+            throw new ArgumentNullException(nameof(appName));
+        }
+        appName = appName.Trim().TrimStart('\\', '/');
+        if (Path.IsPathRooted(appName))
+        {
+            throw new ArgumentException($"{nameof(appName)} can't be an absolute path", nameof(appName));
+        }
+
+        string path;
+        if (RuntimeHelper.GetOSPlatform() == OSPlatform.Windows)
+        {
+            string? localAppData = GetEnvironmentVariable("LocalAppData");
+            path = CombineLogPath(localAppData, @$"{appName}{Path.DirectorySeparatorChar}log");
+        }
+        else if (RuntimeHelper.GetOSPlatform() == OSPlatform.OSX)
+        {
+            string? homeFolder = GetEnvironmentVariable("HOME");
+            path = CombineLogPath(homeFolder, $"{appName}{Path.DirectorySeparatorChar}log");
+        }
+        else if (RuntimeHelper.GetOSPlatform() == OSPlatform.Linux 
+#if NETCOREAPP3_0_OR_GREATER
+                || RuntimeHelper.GetOSPlatform() == OSPlatform.FreeBSD
+#endif
+        )
+        {
+            path = CombineLogPath($"{Path.DirectorySeparatorChar}var{Path.DirectorySeparatorChar}log", $"{appName}");
+        }
+        else
+        {
+            throw new DirectoryNotFoundException("Log directory could not be determined");
+        }
+
+        return path;
+    }
+
+    private static string CombineLogPath(string? prefix, string suffix)
+    {
+        if (string.IsNullOrWhiteSpace(prefix))
+        {
+            throw new DirectoryNotFoundException("Log directory could not be determined");
+        }
+
+#if NETCOREAPP
+        return Path.Join(prefix, suffix);
+#else
+        return Path.Combine(prefix, suffix);
+#endif
+    }
 }
