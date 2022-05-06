@@ -54,7 +54,7 @@ steps:
       codeCoverageTool: Cobertura
       summaryFileLocation: '$(Agent.TempDirectory)/**/coverage.cobertura.xml'  
 
-  - task: SonarCloudAnalyse@1
+  - task: SonarCloudAnalyze@1
     displayName: SonarCloud analysis
 
   - task: SonarCloudPublish@1
