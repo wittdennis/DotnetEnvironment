@@ -26,6 +26,14 @@ steps:
       command: restore
       projects: '**/*.csproj'
 
+  - task: SonarCloudPrepare@1
+    displayName: SonarCloud prepare
+    inputs:
+      SonarCloud: SC
+      organization: 'Pseud0R4ndom'
+      projectKey: 'wittdennis_DotnetEnvironment'
+      projectName: 'DotnetEnvironment'
+
   - task: DotNetCoreCLI@2
     displayName: dotnet build
     inputs:
@@ -44,5 +52,12 @@ steps:
     displayName: 'publish coverage report'
     inputs:
       codeCoverageTool: Cobertura
-      summaryFileLocation: '$(Agent.TempDirectory)/**/coverage.cobertura.xml'
-      
+      summaryFileLocation: '$(Agent.TempDirectory)/**/coverage.cobertura.xml'  
+
+  - task: SonarCloudAnalyse@1
+    displayName: SonarCloud analysis
+
+  - task: SonarCloudPublish@1
+    displayName: publish SonarCloud summary
+    inputs:
+      pollingTimeoutSec: '300'

@@ -154,4 +154,14 @@ public class DotnetEnvironmentTests
         A.CallTo(() => DotnetEnvironment.RuntimeHelper.GetOSPlatform()).Returns(OSPlatform.Linux);
         Assert.Throws<ArgumentNullException>(() => DotnetEnvironment.GetLogDirectory(null!));
     }
+
+    [Fact]
+    public void RuntimeIdentifier_Should_CreateANewInstanceOfRuntimeHelper()
+    {
+        IRuntimeHelper runtimeHelper = DotnetEnvironment.RuntimeHelper;
+        IRuntimeHelper runtimeHelper1 = DotnetEnvironment.RuntimeHelper;
+
+        Assert.IsType<RuntimeHelper>(runtimeHelper);
+        Assert.Same(runtimeHelper, runtimeHelper1);
+    }
 }
