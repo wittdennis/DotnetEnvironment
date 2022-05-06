@@ -10,7 +10,6 @@ variables:
 
 pool:
   vmImage: ununtu-latest
-  demands: dotnet
 
 workspace:
   clean: all
