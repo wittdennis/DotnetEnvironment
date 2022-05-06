@@ -1,0 +1,49 @@
+trigger:
+  batch: true
+  branches:
+    include:
+      - master
+      - feature/*
+
+variables:
+  buildConfiguration: 'Release'
+
+pool:
+  vmImage: ununtu-latest
+  demands: dotnet
+
+workspace:
+  clean: all
+
+steps:
+  - task: UseDotNet@2
+    displayName: install dotnet
+    inputs:
+      version: 6.0.x
+
+  - task: DotNetCoreCLI@2
+    displayName: nuget restore
+    inputs:
+      command: restore
+      projects: '**/*.csproj'
+
+  - task: DotNetCoreCLI@2
+    displayName: dotnet build
+    inputs:
+      command: build
+      projects: '**/*.csproj'
+      arguments: '--no-restore -c $(buildConfiguration)'
+
+  - task: DotNetCoreCLI@2
+    displayName: dotnet test
+    inputs:
+      command: test
+      projects: '**/*[Tt]est[s].csproj' 
+      arguments: '--no-build --blame --collect:"XPlat Code Coverage" --settings coverlet.runsettings'
+  
+  - task: PublishCodeCoverageResults@1
+    displayName: 'publish coverage report'
+    inputs:
+      codeCoverageTool: Cobertura
+      summaryFileLocation: '$(Agent.TempDirectory)/**/coverage.cobertura.xml'
+      
