@@ -30,7 +30,7 @@ steps:
     displayName: SonarCloud prepare
     inputs:
       SonarCloud: SC
-      organization: 'Pseud0R4ndom'
+      organization: 'wittdennis'
       projectKey: 'wittdennis_DotnetEnvironment'
       projectName: 'DotnetEnvironment'
 
