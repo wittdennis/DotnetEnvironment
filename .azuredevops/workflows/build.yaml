@@ -1,0 +1,66 @@
+trigger:
+  batch: true
+  branches:
+    include:
+      - master
+      - feature/*
+
+variables:
+  buildConfiguration: 'Release'
+
+pool:
+  vmImage: ubuntu-latest
+
+workspace:
+  clean: all
+
+steps:
+  - task: UseDotNet@2
+    displayName: install dotnet
+    inputs:
+      version: 6.0.x
+
+  - task: DotNetCoreCLI@2
+    displayName: nuget restore
+    inputs:
+      command: restore
+      projects: '**/*.csproj'
+
+  - task: SonarCloudPrepare@1
+    displayName: SonarCloud prepare
+    inputs:
+      SonarCloud: SC
+      organization: 'wittdennis'
+      projectKey: 'wittdennis_DotnetEnvironment'
+      projectName: 'DotnetEnvironment'
+      extraProperties: |
+        sonar.cs.opencover.reportsPaths=$(Agent.TempDirectory)/**/coverage.opencover.xml
+        sonar.cs.vstest.reportPaths=$(Agent.TempDirectory)/*.trx
+
+  - task: DotNetCoreCLI@2
+    displayName: dotnet build
+    inputs:
+      command: build
+      projects: '**/*.csproj'
+      arguments: '--no-restore -c $(buildConfiguration)'
+
+  - task: DotNetCoreCLI@2
+    displayName: dotnet test
+    inputs:
+      command: test
+      projects: '**/*[Tt]est[s].csproj' 
+      arguments: --no-build -c $(buildConfiguration) --blame --collect:"XPlat Code Coverage" --settings "$(System.DefaultWorkingDirectory)/.azuredevops/workflows/coverlet.runsettings"
+  
+  - task: PublishCodeCoverageResults@1
+    displayName: 'publish coverage report'
+    inputs:
+      codeCoverageTool: Cobertura
+      summaryFileLocation: '$(Agent.TempDirectory)/**/coverage.cobertura.xml'  
+
+  - task: SonarCloudAnalyze@1
+    displayName: SonarCloud analysis
+
+  - task: SonarCloudPublish@1
+    displayName: publish SonarCloud summary
+    inputs:
+      pollingTimeoutSec: '300'
