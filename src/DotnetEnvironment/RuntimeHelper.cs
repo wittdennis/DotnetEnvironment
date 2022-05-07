@@ -9,6 +9,7 @@ internal class RuntimeHelper : IRuntimeHelper
     /// Gets the current running os platform
     /// </summary>
     /// <returns></returns>
+    [ExcludeFromCodeCoverage]
     public OSPlatform GetOSPlatform()
     {
         if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
