@@ -9,7 +9,7 @@ variables:
   buildConfiguration: 'Release'
 
 pool:
-  vmImage: windows-latest
+  vmImage: ubuntu-latest
 
 workspace:
   clean: all
@@ -33,6 +33,9 @@ steps:
       organization: 'wittdennis'
       projectKey: 'wittdennis_DotnetEnvironment'
       projectName: 'DotnetEnvironment'
+      extraPorperties: |
+        sonar.cs.opencover.reportsPaths=$(Agent.TempDirectory)/**/coverage.cobertura.xml
+        sonar.cs.vstest.reportPaths=$(Agent.TempDirectory)/**/*.trx
 
   - task: DotNetCoreCLI@2
     displayName: dotnet build
