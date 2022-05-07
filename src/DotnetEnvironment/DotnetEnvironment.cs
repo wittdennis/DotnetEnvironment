@@ -76,6 +76,8 @@ public static class DotnetEnvironment
     /// <param name="appName">Name of the app. Will be used for the full path</param>
     /// <returns></returns>
     /// <exception cref="DirectoryNotFoundException">When a log location could not be determined</exception>
+    /// <exception cref="ArgumentException">When <paramref name="appName" /> is an absolute path</exception>
+    /// <exception cref="ArgumentNullException">When <paramref name="appName" /> is null or empty</exception>
     public static string GetLogDirectory(string appName)
     {
         if (string.IsNullOrWhiteSpace(appName))
