@@ -36,7 +36,6 @@ steps:
       extraProperties: |
         sonar.cs.opencover.reportsPaths=$(Agent.TempDirectory)/**/coverage.opencover.xml
         sonar.cs.vstest.reportPaths=$(Agent.TempDirectory)/*.trx
-        sonar.verbose=true
 
   - task: DotNetCoreCLI@2
     displayName: dotnet build
