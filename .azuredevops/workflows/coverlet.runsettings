@@ -4,7 +4,7 @@
     <DataCollectors>
       <DataCollector friendlyName="XPlat code coverage">
         <Configuration>
-          <Format>cobertura</Format>                    
+          <Format>cobertura,opencover</Format>                    
           <ExcludeByAttribute>Obsolete,GeneratedCodeAttribute,CompilerGeneratedAttribute</ExcludeByAttribute>                  
           <SingleHit>false</SingleHit>
           <UseSourceLink>true</UseSourceLink>
