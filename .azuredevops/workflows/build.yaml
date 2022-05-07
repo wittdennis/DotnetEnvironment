@@ -46,7 +46,7 @@ steps:
     inputs:
       command: test
       projects: '**/*[Tt]est[s].csproj' 
-      arguments: --no-build -c $(buildConfiguration) --blame --collect:"XPlat Code Coverage" --settings "$(System.DefaultWorkingDirectory)/.azuredevops/workflows/coverlet.runsettings"
+      arguments: --no-build -c $(buildConfiguration) --blame --collect "Code Coverage" --collect:"XPlat Code Coverage" --settings "$(System.DefaultWorkingDirectory)/.azuredevops/workflows/coverlet.runsettings"
   
   - task: PublishCodeCoverageResults@1
     displayName: 'publish coverage report'
