@@ -33,8 +33,10 @@ steps:
       organization: 'wittdennis'
       projectKey: 'wittdennis_DotnetEnvironment'
       projectName: 'DotnetEnvironment'
-      extraPorperties: |
+      extraPorperties: >
+        extraPorperties: |
         sonar.cs.opencover.reportsPaths=$(Agent.TempDirectory)/**/coverage.opencover.xml
+        sonar.cs.vstest.reportPaths=$(Agent.TempDirectory)/*.trx
         sonar.verbose=true
 
   - task: DotNetCoreCLI@2
