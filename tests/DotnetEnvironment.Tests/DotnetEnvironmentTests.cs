@@ -159,9 +159,9 @@ public class DotnetEnvironmentTests
     public void RuntimeIdentifier_Should_CreateANewInstanceOfRuntimeHelper()
     {
         IRuntimeHelper runtimeHelper = DotnetEnvironment.RuntimeHelper;
-        IRuntimeHelper runtimeHelper1 = DotnetEnvironment.RuntimeHelper;
+        Assert.NotNull(runtimeHelper);
 
-        Assert.IsType<RuntimeHelper>(runtimeHelper);
+        IRuntimeHelper runtimeHelper1 = DotnetEnvironment.RuntimeHelper;        
         Assert.Same(runtimeHelper, runtimeHelper1);
     }
 }
