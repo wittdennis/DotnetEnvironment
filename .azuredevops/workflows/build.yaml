@@ -5,6 +5,12 @@ trigger:
       - master
       - feature/*
 
+pr:
+  autoCancel: true
+  branches:
+    include:
+      - master  
+
 variables:
   buildConfiguration: 'Release'
 
