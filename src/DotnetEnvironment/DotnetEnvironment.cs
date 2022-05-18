@@ -48,6 +48,12 @@ public static class DotnetEnvironment
         => Environment.Equals("development", StringComparison.OrdinalIgnoreCase);
 
     /// <summary>
+    /// Checks if the current application is running inside a container by checking if a environment variable called DOTNET_RUNNING_IN_CONTAINER is set to true
+    /// </summary>
+    public static bool IsRunningInContainer
+        => string.Equals(GetEnvironmentVariable("DOTNET_RUNNING_IN_CONTAINER") ?? "false", "true", StringComparison.OrdinalIgnoreCase);
+
+    /// <summary>
     /// Retrieves the value of an environment variable from the current process.
     /// </summary>
     /// <param name="variable">The name of the environment variable.</param>
@@ -65,7 +71,7 @@ public static class DotnetEnvironment
     /// <exception cref="NullReferenceException">When the entry assembly could not be determined. See remarks for more info</exception>
     /// <remarks>    
     /// This method uses <see href="https://docs.microsoft.com/dotnet/api/system.reflection.assembly.getentryassembly#remarks">Assembly.GetEntryAssembly()</see> internally and thus has the same limitations. 
-    /// It is adviced to use the <see cref="GetLogDirectory(string)" instead.
+    /// It is advised to use the <see cref="GetLogDirectory(string)" instead.
     /// </remarks>
     public static string GetLogDirectory()     
         => GetLogDirectory(Assembly.GetEntryAssembly()!.GetName().Name!);    
