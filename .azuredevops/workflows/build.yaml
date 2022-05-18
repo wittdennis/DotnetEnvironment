@@ -11,8 +11,15 @@ pr:
     include:
       - master  
 
-variables:
-  buildConfiguration: 'Release'
+variables:  
+  - name: buildConfiguration
+    value: 'Release' 
+  - name: versionSuffix
+    ${{ if eq( variables['Build.SourceBranchName'], 'master' ) }}
+      value: ''
+    ${{ if ne( variables['Build.SourceBranchName'], 'master' ) }}
+      value: ''
+
 
 pool:
   vmImage: ubuntu-latest
@@ -70,3 +77,10 @@ steps:
     displayName: publish SonarCloud summary
     inputs:
       pollingTimeoutSec: '300'
+  
+  - task: DotNetCoreCLI@2
+    displayName: dotnet pack
+    inputs:
+      command: pack
+      arguments: --no-build -c $(buildConfiguration) --version-suffix $(versionSuffix)
+      packagesToPack: src/**/*.csproj    
