@@ -50,6 +50,18 @@ public class DotnetEnvironmentTests
     }
 
     [Theory]
+    [InlineData("false", false)]
+    [InlineData("", false)]
+    [InlineData("true", true)]
+    [InlineData("TRUE", true)]
+    public void IsRunningInContainer_Should_ReturnBoolBasedOnDotnetRunningInContainerEnvironmentVariable(string env, bool expected)
+    {
+        Environment.SetEnvironmentVariable("DOTNET_RUNNING_IN_CONTAINER", env, EnvironmentVariableTarget.Process);
+
+        Assert.Equal(expected, DotnetEnvironment.IsRunningInContainer);
+    }
+
+    [Theory]
     [InlineData("VAR_NAME", "value")]
     [InlineData("VAR_NAME2", "Test")]
     [InlineData("VAR_NAME3", null!)]
