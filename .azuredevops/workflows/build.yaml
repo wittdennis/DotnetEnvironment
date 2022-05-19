@@ -93,4 +93,5 @@ steps:
         -s https://api.nuget.org/v3/index.json
     env:
       NUGET_KEY: $(nugetKey)
+    displayName: nuget push
     condition: and(succeeded(), not(eq(variables['build.reason'], 'PullRequest')))  

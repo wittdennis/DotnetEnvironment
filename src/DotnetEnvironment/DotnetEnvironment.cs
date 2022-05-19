@@ -71,7 +71,7 @@ public static class DotnetEnvironment
     /// <exception cref="NullReferenceException">When the entry assembly could not be determined. See remarks for more info</exception>
     /// <remarks>    
     /// This method uses <see href="https://docs.microsoft.com/dotnet/api/system.reflection.assembly.getentryassembly#remarks">Assembly.GetEntryAssembly()</see> internally and thus has the same limitations. 
-    /// It is advised to use the <see cref="GetLogDirectory(string)" instead.
+    /// It is advised to use the <see cref="GetLogDirectory(string)" /> instead.
     /// </remarks>
     public static string GetLogDirectory()     
         => GetLogDirectory(Assembly.GetEntryAssembly()!.GetName().Name!);    
