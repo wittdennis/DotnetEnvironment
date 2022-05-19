@@ -3,16 +3,24 @@ trigger:
   branches:
     include:
       - master
-      - feature/*
+      - release/*
 
 pr:
   autoCancel: true
   branches:
     include:
       - master
+      - release/*
 
-variables:
-  buildConfiguration: 'Release'
+variables:  
+  - name: buildConfiguration
+    value: 'Release' 
+  - name: versionSuffix
+    ${{ if eq( variables['Build.SourceBranchName'], 'master' )}}:
+      value: ''
+    ${{ else }}:
+      value: 'preview'
+
 
 pool:
   vmImage: ubuntu-latest
@@ -70,3 +78,20 @@ steps:
     displayName: publish SonarCloud summary
     inputs:
       pollingTimeoutSec: '300'
+  
+  - task: DotNetCoreCLI@2
+    displayName: dotnet pack
+    inputs:
+      command: pack
+      arguments: --no-build -c $(buildConfiguration) --version-suffix $(versionSuffix)
+      packagesToPack: src/**/*.csproj    
+    condition: and(succeeded(), not(eq(variables['build.reason'], 'PullRequest')))  
+
+  - bash: |
+      dotnet nuget push "**/*.nupkg" \
+        -k $NUGET_KEY \
+        -s https://api.nuget.org/v3/index.json
+    env:
+      NUGET_KEY: $(nugetKey)
+    displayName: nuget push
+    condition: and(succeeded(), not(eq(variables['build.reason'], 'PullRequest')))  

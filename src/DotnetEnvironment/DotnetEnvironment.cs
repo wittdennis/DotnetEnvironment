@@ -71,7 +71,7 @@ public static class DotnetEnvironment
     /// <exception cref="NullReferenceException">When the entry assembly could not be determined. See remarks for more info</exception>
     /// <remarks>    
     /// This method uses <see href="https://docs.microsoft.com/dotnet/api/system.reflection.assembly.getentryassembly#remarks">Assembly.GetEntryAssembly()</see> internally and thus has the same limitations. 
-    /// It is advised to use the <see cref="GetLogDirectory(string)" instead.
+    /// It is advised to use the <see cref="GetLogDirectory(string)" /> instead.
     /// </remarks>
     public static string GetLogDirectory()     
         => GetLogDirectory(Assembly.GetEntryAssembly()!.GetName().Name!);    
@@ -82,6 +82,8 @@ public static class DotnetEnvironment
     /// <param name="appName">Name of the app. Will be used for the full path</param>
     /// <returns></returns>
     /// <exception cref="DirectoryNotFoundException">When a log location could not be determined</exception>
+    /// <exception cref="ArgumentException">When <paramref name="appName" /> is an absolute path</exception>
+    /// <exception cref="ArgumentNullException">When <paramref name="appName" /> is null or empty</exception>
     public static string GetLogDirectory(string appName)
     {
         if (string.IsNullOrWhiteSpace(appName))

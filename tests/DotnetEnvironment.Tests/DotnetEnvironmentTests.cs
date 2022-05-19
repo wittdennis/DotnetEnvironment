@@ -77,27 +77,27 @@ public class DotnetEnvironmentTests
     [InlineData("app2")]
     public void GetLogDirectory_Should_PlatformSpecificLogPath(string appName)
     {
-        char seperator = Path.DirectorySeparatorChar;
+        char separator = Path.DirectorySeparatorChar;
         DotnetEnvironment.RuntimeHelper = A.Fake<IRuntimeHelper>();
         
-        Environment.SetEnvironmentVariable("LocalAppData", @$"C:{seperator}Users{seperator}USER{seperator}AppData{seperator}Local", EnvironmentVariableTarget.Process);
+        Environment.SetEnvironmentVariable("LocalAppData", @$"C:{separator}Users{separator}USER{separator}AppData{separator}Local", EnvironmentVariableTarget.Process);
         A.CallTo(() => DotnetEnvironment.RuntimeHelper.GetOSPlatform()).Returns(OSPlatform.Windows);        
         string logPath = DotnetEnvironment.GetLogDirectory(appName);
-        Assert.Equal(@$"C:{seperator}Users{seperator}USER{seperator}AppData{seperator}Local{seperator}{appName}{seperator}log", logPath);
+        Assert.Equal(@$"C:{separator}Users{separator}USER{separator}AppData{separator}Local{separator}{appName}{separator}log", logPath);
 
-        Environment.SetEnvironmentVariable("HOME", $"{seperator}home{seperator}USER", EnvironmentVariableTarget.Process);
+        Environment.SetEnvironmentVariable("HOME", $"{separator}home{separator}USER", EnvironmentVariableTarget.Process);
         A.CallTo(() => DotnetEnvironment.RuntimeHelper.GetOSPlatform()).Returns(OSPlatform.OSX);
         logPath = DotnetEnvironment.GetLogDirectory(appName);
-        Assert.Equal($"{seperator}home{seperator}USER{seperator}{appName}{seperator}log", logPath);
+        Assert.Equal($"{separator}home{separator}USER{separator}{appName}{separator}log", logPath);
     
         A.CallTo(() => DotnetEnvironment.RuntimeHelper.GetOSPlatform()).Returns(OSPlatform.Linux);
         logPath = DotnetEnvironment.GetLogDirectory(appName);
-        Assert.Equal($"{seperator}var{seperator}log{seperator}{appName}", logPath);
+        Assert.Equal($"{separator}var{separator}log{separator}{appName}", logPath);
 
         #if NETCOREAPP3_0_OR_GREATER
         A.CallTo(() => DotnetEnvironment.RuntimeHelper.GetOSPlatform()).Returns(OSPlatform.FreeBSD);
         logPath = DotnetEnvironment.GetLogDirectory(appName);
-        Assert.Equal($"{seperator}var{seperator}log{seperator}{appName}", logPath);
+        Assert.Equal($"{separator}var{separator}log{separator}{appName}", logPath);
         #endif
     }
 
@@ -136,27 +136,27 @@ public class DotnetEnvironmentTests
     public void GetLogDirectory_Should_ReturnPathWithAssemblyName_When_MethodWithoutAppNameParameterIsUsed()
     {
         string appName = "testhost";
-        char seperator = Path.DirectorySeparatorChar;
+        char separator = Path.DirectorySeparatorChar;
         DotnetEnvironment.RuntimeHelper = A.Fake<IRuntimeHelper>();
         
-        Environment.SetEnvironmentVariable("LocalAppData", @$"C:{seperator}Users{seperator}USER{seperator}AppData{seperator}Local", EnvironmentVariableTarget.Process);
+        Environment.SetEnvironmentVariable("LocalAppData", @$"C:{separator}Users{separator}USER{separator}AppData{separator}Local", EnvironmentVariableTarget.Process);
         A.CallTo(() => DotnetEnvironment.RuntimeHelper.GetOSPlatform()).Returns(OSPlatform.Windows);        
         string logPath = DotnetEnvironment.GetLogDirectory();
-        Assert.Equal(@$"C:{seperator}Users{seperator}USER{seperator}AppData{seperator}Local{seperator}{appName}{seperator}log", logPath);
+        Assert.Equal(@$"C:{separator}Users{separator}USER{separator}AppData{separator}Local{separator}{appName}{separator}log", logPath);
 
-        Environment.SetEnvironmentVariable("HOME", $"{seperator}home{seperator}USER", EnvironmentVariableTarget.Process);
+        Environment.SetEnvironmentVariable("HOME", $"{separator}home{separator}USER", EnvironmentVariableTarget.Process);
         A.CallTo(() => DotnetEnvironment.RuntimeHelper.GetOSPlatform()).Returns(OSPlatform.OSX);
         logPath = DotnetEnvironment.GetLogDirectory();
-        Assert.Equal($"{seperator}home{seperator}USER{seperator}{appName}{seperator}log", logPath);
+        Assert.Equal($"{separator}home{separator}USER{separator}{appName}{separator}log", logPath);
     
         A.CallTo(() => DotnetEnvironment.RuntimeHelper.GetOSPlatform()).Returns(OSPlatform.Linux);
         logPath = DotnetEnvironment.GetLogDirectory();
-        Assert.Equal($"{seperator}var{seperator}log{seperator}{appName}", logPath);
+        Assert.Equal($"{separator}var{separator}log{separator}{appName}", logPath);
 
         #if NETCOREAPP3_0_OR_GREATER
         A.CallTo(() => DotnetEnvironment.RuntimeHelper.GetOSPlatform()).Returns(OSPlatform.FreeBSD);
         logPath = DotnetEnvironment.GetLogDirectory();
-        Assert.Equal($"{seperator}var{seperator}log{seperator}{appName}", logPath);
+        Assert.Equal($"{separator}var{separator}log{separator}{appName}", logPath);
         #endif
     }
 
