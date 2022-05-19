@@ -84,7 +84,7 @@ steps:
     inputs:
       command: pack
       arguments: --no-build -c $(buildConfiguration) --version-suffix $(versionSuffix)
-      packagesToPack: src/**/*.csproj    
+      packagesToPack: src/**/*.csproj
     condition: and(succeeded(), not(eq(variables['build.reason'], 'PullRequest')))  
 
   - bash: |
@@ -94,4 +94,5 @@ steps:
     env:
       NUGET_KEY: $(nugetKey)
     displayName: nuget push
+    workingDirectory: $(Build.ArtifactStagingDirectory)
     condition: and(succeeded(), not(eq(variables['build.reason'], 'PullRequest')))  
