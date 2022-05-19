@@ -1,6 +1,3 @@
 {
-    "editor.formatOnType": true,
-    "yaml.schemas": {
-        "https://raw.githubusercontent.com/microsoft/azure-pipelines-vscode/master/service-schema.json": "./src/DotnetEnvironment/.azuredevops/workflows/build.yaml"
-    }
+    "editor.formatOnType": true
 }
