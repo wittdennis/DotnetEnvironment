@@ -13,6 +13,7 @@
     <PackageId>Pseud0R4ndom.DotnetEnvironment</PackageId>
     <Authors>Dennis Witt</Authors>
     <Company></Company>
+    <Copyright>Copyright © 2022 Dennis Witt</Copyright>
     <PackageTags>Environment</PackageTags>
     <Description>DotnetEnvironment is an opinionated package to retrieve information about the current environment an application is running in.</Description>
     <PackageReadmeFile>README.md</PackageReadmeFile>

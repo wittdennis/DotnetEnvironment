@@ -3,22 +3,23 @@ trigger:
   branches:
     include:
       - master
-      - feature/*
+      - release/*
 
 pr:
   autoCancel: true
   branches:
     include:
-      - master  
+      - master
+      - release/*
 
 variables:  
   - name: buildConfiguration
     value: 'Release' 
   - name: versionSuffix
-    ${{ if eq( variables['Build.SourceBranchName'], 'master' ) }}
+    ${{ if eq( variables['Build.SourceBranchName'], 'master' )}}:
       value: ''
-    ${{ if ne( variables['Build.SourceBranchName'], 'master' ) }}
-      value: ''
+    ${{ else }}:
+      value: 'preview'
 
 
 pool:
@@ -84,3 +85,12 @@ steps:
       command: pack
       arguments: --no-build -c $(buildConfiguration) --version-suffix $(versionSuffix)
       packagesToPack: src/**/*.csproj    
+    condition: and(succeeded(), not(eq(variables['build.reason'], 'PullRequest')))  
+
+  - bash: |
+      dotnet nuget push "**/*.nupkg" \
+        -k $NUGET_KEY \
+        -s https://api.nuget.org/v3/index.json
+    env:
+      NUGET_KEY: $(nugetKey)
+    condition: and(succeeded(), not(eq(variables['build.reason'], 'PullRequest')))  
